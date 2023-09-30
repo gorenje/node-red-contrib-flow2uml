@@ -38,6 +38,6 @@ Save the changes and the info box will either show the image or not.
 
 - [Flow that maintains](https://flowhub.org/f/8e598f0f47194617) the codebase
 - [GitHub repo](https://github.com/gorenje/node-red-contrib-flow2uml)
-- [NPMjs node package]()
-- [Node-RED node package]()
+- [NPMjs node package](https://www.npmjs.com/package/@gregoriusrippenstein/node-red-contrib-flow2uml)
+- [Node-RED node package](https://flows.nodered.org/node/@gregoriusrippenstein/node-red-contrib-flow2uml)
 
