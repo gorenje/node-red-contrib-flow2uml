@@ -12,7 +12,7 @@
   "license": "SEE LICENSE IN https://github.com/gorenje/node-red-contrib-flow2uml/blob/main/LICENSE",
   "author": "Gerrit Riessen <nodered@spreads-the.love> (https://spread-the.love)",
   "engines": {
-    "node": ">=16"
+    "node": ">=8"
   },
 
   "node-red" : {
