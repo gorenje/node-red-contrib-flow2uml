@@ -37,7 +37,7 @@ Save the changes and the info box will either show the image or not.
 ### Artifacts
 
 - [Flow that maintains](https://flowhub.org/f/8e598f0f47194617) the codebase
-- [GitHub repo]()
+- [GitHub repo](https://github.com/gorenje/node-red-contrib-flow2uml)
 - [NPMjs node package]()
 - [Node-RED node package]()
 
