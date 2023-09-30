@@ -1,0 +1,33 @@
+{
+  "name" : "@gregoriusrippenstein/node-red-contrib-flow2uml",
+  "version": "0.0.1",
+  "dependencies": {
+  },
+
+  "keywords": [
+    "node-red", "uml", "mermaid"
+  ],
+
+  "homepage": "https://flowhub.org",
+  "license": "SEE LICENSE IN https://github.com/gorenje/node-red-contrib-flow2uml/blob/main/LICENSE",
+  "author": "Gerrit Riessen <nodered@spreads-the.love> (https://spread-the.love)",
+  "engines": {
+    "node": ">=16"
+  },
+
+  "node-red" : {
+    "version": ">=2.0.0",
+    "nodes": {
+      "flowtomermaid": "nodes/flow2mermaid.js"
+    }
+  },
+
+  "description": "Convert current flow tab to Mermaid flow diagram.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gorenje/node-red-contrib-flow2uml.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gorenje/node-red-contrib-flow2uml/issues"
+  }
+}

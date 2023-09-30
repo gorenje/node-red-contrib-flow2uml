@@ -1,0 +1,243 @@
+<script type="text/javascript">
+(function(){
+
+  function constructMermaid(nodes) {
+    var msg = {
+      payload: nodes
+    }
+
+    var nodes = msg.payload.filter((n) => {
+        return n.type != "tab" && n.type != "group"
+    })
+
+    var id2node = {};
+    for (var idx = 0; idx < nodes.length; idx++) {
+        var nd = nodes[idx];
+        id2node[nd.id] = nd;
+    }
+
+    var escapeForMermaid = (str) => {
+        return str.replaceAll(
+            "&", "&amp;"
+        ).replaceAll(
+            "#", "#35;"
+        ).replaceAll(
+            "[", "#91;"
+        ).replaceAll(
+            "]", "#93;"
+        ).replaceAll(
+            "(", "#40;"
+        ).replaceAll(
+            ")", "#41;"
+        ).replaceAll(
+            "|", "#124;"
+        ).replaceAll(
+            ">", "&gt;"
+        ).replaceAll(
+            "<", "&lt;"
+        ).replaceAll(
+            "{", "#123;"
+        ).replaceAll(
+            "}", "#125;"
+        ).replaceAll(
+            "/", "#47;"
+        )
+    };
+
+    var node2label = (nd, nme = undefined) => {
+        var labl = nd.name || nd.type;
+
+        if (nme) {
+            nme = "|" + escapeForMermaid(nme) + "| "
+        } else { nme = "" }
+
+        labl = escapeForMermaid(labl);
+
+        switch (nd.type) {
+            case "switch":
+            case "join":
+            case "split":
+                return nme + nd.id + "{\"" + labl + "\"}"
+
+            case "link out":
+                if ( nd.mode && nd.mode == "return") {
+                    return nme + nd.id + "[\\Link Return/]"    
+                }
+
+                if ( nd.name && !nd.name.match( /^link out/) ) {
+                    return nme + nd.id + "\{\{\"" + labl + "\"\}\}"                  
+                }
+
+                var targetNode = (nd.links && nd.links.length > 0 && ( id2node[nd.links[0]] || RED.nodes.node(nd.links[0]) ));
+                labl = escapeForMermaid((targetNode && targetNode.name) || nd.type)
+                return nme + nd.id + "\{\{\"" + labl + "\"\}\}"
+
+            case "link in":
+            case "link call":
+                labl = escapeForMermaid(nd.name || (nd.links && nd.links.length > 0 && id2node[nd.links[0]] && id2node[nd.links[0]].name) || nd.type)
+                if ( nd.mode && nd.mode == "return") {
+                    return nme + nd.id + "[\\Link Return/]"    
+                }
+                return nme + nd.id + "\{\{\"" + labl + "\"\}\}"
+
+            case "junction":
+                return nme + nd.id + "((\"" + labl + "\"))"
+
+            case "debug":
+                return nme + nd.id + "(\"" + labl + "\")"
+
+            default:
+                return nme + nd.id + "[\"" + labl + "\"]"
+        }
+    }
+
+    /* 
+      we attach the mermaid array on the msg object because if an exception
+      happens, we can check how far this code got. That is by comparing the
+      contents of this array with the payload, we know which node caused
+      the exception.
+    */
+    msg.mermaid = [
+        "%% change this to LR Node-RED like UML",
+        "graph " + $('#node-input-direction').val()
+    ];
+
+    for (var idx = 0; idx < nodes.length; idx++) {
+        var nde = nodes[idx];
+
+        if (nde.links && nde.links.length > 0 && nde.type == "link out") {
+            for (var ldx = 0; ldx < nde.links.length; ldx++) {
+                /* link-out wire: only add a dashed link wire iff the node is included in this graph */
+                if (id2node[nde.links[ldx]]) {
+                    msg.mermaid.push(
+                        node2label(nde) + " -.-> " + nde.links[ldx]
+                    )
+                }
+            }
+        }
+
+        if (nde.wires && nde.wires.length > 0) {
+            if (nde.type == "switch") {
+                for (var odx = 0; odx < nde.wires.length; odx++) {
+                    for (var wdx = 0; wdx < nde.wires[odx].length; wdx++) {
+                        msg.mermaid.push(
+                            node2label(nde) + " --> " + node2label(id2node[nde.wires[odx][wdx]], nde.rules[odx] && (nde.rules[odx].v || nde.rules[odx].t))
+                        )
+                    }
+                }
+            } else {
+                for (var wdx = 0; wdx < nde.wires[0].length; wdx++) {
+                  msg.mermaid.push(
+                      node2label(nde) + " --> " + node2label(id2node[nde.wires[0][wdx]])
+                  )
+                }
+            }
+        }
+    }
+
+    return msg.mermaid.join("\n");
+  }
+  
+  function obtainCurrentActiveFlow(node) {
+      var activeWorkspace = RED.workspaces.active();
+      var nodes = RED.nodes.groups(activeWorkspace);
+
+      nodes = nodes.concat(RED.nodes.junctions(activeWorkspace));
+      nodes = nodes.concat(RED.nodes.filterNodes({ z: activeWorkspace }));
+
+      RED.nodes.eachConfig(function (n) {
+        if (n.z === RED.workspaces.active() && n._def.hasUsers === false) {
+          // Grab any config nodes scoped to this flow that don't
+          // require any flow-nodes to use them
+          nodes.push(n);
+        }
+      });
+
+      var parentNode = RED.nodes.workspace(
+        activeWorkspace
+      ) || RED.nodes.subflow(activeWorkspace);
+
+      nodes.unshift(parentNode);
+
+      var expNodes = RED.nodes.createExportableNodeSet(nodes)
+
+      // remove ourselves from the list of nodes.
+      try {
+        expNodes = expNodes.filter( (n) => { 
+          return n.id != node.id 
+        })
+      } catch (ex) {}
+
+      return expNodes;
+  };
+
+  RED.nodes.registerType('Flow2UML',{
+    color: '#C0DDFF',
+    icon: "font-awesome/fa-shower",
+    category: 'introspection',
+    paletteLabel: 'Flow to UML',
+    defaults: {
+      name: {
+        value:"",
+      },
+      direction: {
+        value: "TB"
+      }
+    },
+
+    inputs: 0,
+    outputs: 0,
+
+    label: function() {
+      return (this.name || this._def.paletteLabel);
+    },
+
+    labelStyle: function() {
+      return this.name?"node_label_italic":"";
+    },
+
+    oneditprepare: function() {
+      var that = this;
+      
+      $('#node-input-direction').val(that.direction)
+
+      $('#node-input-generate-diagram-but').on('click', (e) => {
+        e.preventDefault();
+        var mermaidTxt = constructMermaid(obtainCurrentActiveFlow(that));
+        that.infoEditor.setValue("```mermaid\n" + mermaidTxt + "\n```\n");
+      })
+    },
+
+    oneditcancel: function() {
+    },
+
+    oneditsave: function() {
+    },
+  });
+})();
+</script>
+
+<script type="text/html" data-template-name="Flow2UML">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name"/>
+    </div>
+
+    <div class="form-row">
+      <label for="node-input-direction"><i class="fa fa-tag"></i> Direction</label>
+      <select id="node-input-direction">
+        <option value="TB">Top to Bottom</option>
+        <option value="LR">Left to Right</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <button id="node-input-generate-diagram-but"
+                  class="red-ui-button">Generate Mermaid Diagram</button>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="Flow2UML">
+  <p>Generate a Mermaid flowchart diagram from the current flow tab.</p>
+  Generates a flow diagram using Mermaid and this flow. Node-RED 3.1.x how has support for Mermaid diagrams in the info boxes, so use that to display a diagram for the current flow.
+</script>
