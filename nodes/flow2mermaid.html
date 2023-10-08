@@ -59,6 +59,7 @@
             case "split":
                 return nme + nd.id + "{\"" + labl + "\"}"
 
+            case "link call":
             case "link out":
                 if ( nd.mode && nd.mode == "return") {
                     return nme + nd.id + "[\\Link Return/]"    
@@ -68,16 +69,17 @@
                     return nme + nd.id + "\{\{\"" + labl + "\"\}\}"                  
                 }
 
+                if ( nd.linkType == "dynamic" ) {
+                  labl = "\\Dynamic Target/"
+                  return nme + nd.id + "\{\{\"" + labl + "\"\}\}"
+                }
+
                 var targetNode = (nd.links && nd.links.length > 0 && ( id2node[nd.links[0]] || RED.nodes.node(nd.links[0]) ));
                 labl = escapeForMermaid((targetNode && targetNode.name) || nd.type)
                 return nme + nd.id + "\{\{\"" + labl + "\"\}\}"
 
             case "link in":
-            case "link call":
                 labl = escapeForMermaid(nd.name || (nd.links && nd.links.length > 0 && id2node[nd.links[0]] && id2node[nd.links[0]].name) || nd.type)
-                if ( nd.mode && nd.mode == "return") {
-                    return nme + nd.id + "[\\Link Return/]"    
-                }
                 return nme + nd.id + "\{\{\"" + labl + "\"\}\}"
 
             case "junction":
@@ -203,8 +205,17 @@
 
       $('#node-input-generate-diagram-but').on('click', (e) => {
         e.preventDefault();
+        
         var mermaidTxt = constructMermaid(obtainCurrentActiveFlow(that));
         that.infoEditor.setValue("```mermaid\n" + mermaidTxt + "\n```\n");
+
+        $('#red-ui-tab-editor-tab-description-link-button').trigger('click');
+
+        RED.notify("Mermaid diagram generated", {
+          type: "success",
+          id: "Flow2UML",
+          timeout: 2000
+        });
       })
     },
 
