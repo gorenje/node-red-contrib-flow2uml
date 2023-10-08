@@ -5,10 +5,10 @@
         "z": "666972381aaa960e",
         "name": "",
         "direction": "TB",
-        "x": 592,
-        "y": 1058,
+        "x": 366,
+        "y": 1150,
         "wires": [],
-        "info": "```mermaid\n%% change this to LR Node-RED like UML\ngraph TB\n15376617333a1cab((\"junction\")) --> 74d7a6997bfd0be6[\"Node 1\"]\n9621464ec075aaea[\"Trigger\"] --> 74d7a6997bfd0be6[\"Node 1\"]\n74d7a6997bfd0be6[\"Node 1\"] --> a37ef444d6544d3f[\"Node 2\"]\na37ef444d6544d3f[\"Node 2\"] --> 15376617333a1cab((\"junction\"))\nf7bb569589f45fc1[\"inject\"] --> ddbe12646ee71de7\nddbe12646ee71de7 -.-> 81b6d3b04cc3cffc\n81b6d3b04cc3cffc --> acd94a5b651b9d09(\"debug 43\")\n3c9c7420efd1a2cb{\"switch\"} --> |true| e1c85c8253330a50(\"debug 44\")\n3c9c7420efd1a2cb{\"switch\"} --> |111| cb78c73e5ec8c6e0(\"debug 45\")\n3c9c7420efd1a2cb{\"switch\"} --> |nnull| 2f9b7422aeb4b9ce(\"debug 46\")\n3c9c7420efd1a2cb{\"switch\"} --> |empty| e43a4123ee3782b0(\"debug 47\")\n3c9c7420efd1a2cb{\"switch\"} --> |false| 02e5b6a5f8ec0a63(\"debug 48\")\n071ee6651cbae1f9[\"inject\"] --> 3c9c7420efd1a2cb{\"switch\"}\n```\n"
+        "info": "```mermaid\n%% change this to LR Node-RED like UML\ngraph TB\n15376617333a1cab((\"junction\")) --> 74d7a6997bfd0be6[\"Node 1\"]\n9621464ec075aaea[\"Trigger\"] --> 74d7a6997bfd0be6[\"Node 1\"]\n74d7a6997bfd0be6[\"Node 1\"] --> a37ef444d6544d3f[\"Node 2\"]\na37ef444d6544d3f[\"Node 2\"] --> 15376617333a1cab((\"junction\"))\nf7bb569589f45fc1[\"inject\"] --> ddbe12646ee71de7\nddbe12646ee71de7 -.-> 81b6d3b04cc3cffc\n81b6d3b04cc3cffc --> acd94a5b651b9d09(\"debug 43\")\n3c9c7420efd1a2cb{\"switch\"} --> |true| e1c85c8253330a50(\"debug 44\")\n3c9c7420efd1a2cb{\"switch\"} --> |111| cb78c73e5ec8c6e0(\"debug 45\")\n3c9c7420efd1a2cb{\"switch\"} --> |nnull| 2f9b7422aeb4b9ce(\"debug 46\")\n3c9c7420efd1a2cb{\"switch\"} --> |empty| e43a4123ee3782b0(\"debug 47\")\n3c9c7420efd1a2cb{\"switch\"} --> |false| 02e5b6a5f8ec0a63(\"debug 48\")\n071ee6651cbae1f9[\"inject\"] --> 3c9c7420efd1a2cb{\"switch\"}\n40ef694487ad3f35[\"function 5\"] --> |one| 9e96d41e211349b1(\"debug 50\")\n40ef694487ad3f35[\"function 5\"] --> |two| 46aef060728e05e4(\"debug 51\")\n40ef694487ad3f35[\"function 5\"] --> |three| dcee09ce88c548de(\"debug 52\")\n40ef694487ad3f35[\"function 5\"] --> |four| 2d5f359cb8a33d99(\"debug 53\")\nad1deafa0e182816[\"inject\"] --> 40ef694487ad3f35[\"function 5\"]\n```\n"
     },
     {
         "id": "cd6a3e12062d27b3",
@@ -426,5 +426,165 @@
         "x": 1468,
         "y": 890,
         "wires": []
+    },
+    {
+        "id": "ae22cf7a3e599274",
+        "type": "group",
+        "z": "666972381aaa960e",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "40ef694487ad3f35",
+            "9e96d41e211349b1",
+            "46aef060728e05e4",
+            "dcee09ce88c548de",
+            "2d5f359cb8a33d99",
+            "ad1deafa0e182816"
+        ],
+        "x": 889,
+        "y": 1060,
+        "w": 746,
+        "h": 325
+    },
+    {
+        "id": "40ef694487ad3f35",
+        "type": "function",
+        "z": "666972381aaa960e",
+        "g": "ae22cf7a3e599274",
+        "name": "function 5",
+        "func": "\nreturn msg;",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1150,
+        "y": 1158,
+        "wires": [
+            [
+                "9e96d41e211349b1"
+            ],
+            [
+                "46aef060728e05e4"
+            ],
+            [
+                "dcee09ce88c548de"
+            ],
+            [
+                "2d5f359cb8a33d99"
+            ]
+        ],
+        "outputLabels": [
+            "one",
+            "two",
+            "three",
+            "four"
+        ]
+    },
+    {
+        "id": "9e96d41e211349b1",
+        "type": "debug",
+        "z": "666972381aaa960e",
+        "g": "ae22cf7a3e599274",
+        "name": "debug 50",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1527,
+        "y": 1189,
+        "wires": []
+    },
+    {
+        "id": "46aef060728e05e4",
+        "type": "debug",
+        "z": "666972381aaa960e",
+        "g": "ae22cf7a3e599274",
+        "name": "debug 51",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1523,
+        "y": 1234,
+        "wires": []
+    },
+    {
+        "id": "dcee09ce88c548de",
+        "type": "debug",
+        "z": "666972381aaa960e",
+        "g": "ae22cf7a3e599274",
+        "name": "debug 52",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1529,
+        "y": 1290,
+        "wires": []
+    },
+    {
+        "id": "2d5f359cb8a33d99",
+        "type": "debug",
+        "z": "666972381aaa960e",
+        "g": "ae22cf7a3e599274",
+        "name": "debug 53",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1525,
+        "y": 1344,
+        "wires": []
+    },
+    {
+        "id": "ad1deafa0e182816",
+        "type": "inject",
+        "z": "666972381aaa960e",
+        "g": "ae22cf7a3e599274",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 995,
+        "y": 1101,
+        "wires": [
+            [
+                "40ef694487ad3f35"
+            ]
+        ]
     }
 ]
