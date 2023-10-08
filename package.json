@@ -8,7 +8,7 @@
     "node-red", "uml", "mermaid"
   ],
 
-  "homepage": "https://flowhub.org",
+  "homepage": "https://github.com/gorenje/node-red-contrib-flow2uml#README.md",
   "license": "SEE LICENSE IN https://github.com/gorenje/node-red-contrib-flow2uml/blob/main/LICENSE",
   "author": "Gerrit Riessen <nodered@spreads-the.love> (https://spread-the.love)",
   "engines": {
