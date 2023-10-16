@@ -1,0 +1,334 @@
+<script type="text/javascript">
+(function() {
+   var globalYourConfigNode = null;
+
+   (function() {
+
+    function constructMermaid(nodes, direction="TB", redRef=undefined) {
+        var msg = {
+            payload: nodes
+        }
+
+        var nodes = msg.payload.filter((n) => {
+            return n.type != "tab" && n.type != "group"
+        })
+
+        var id2node = {};
+        for (var idx = 0; idx < nodes.length; idx++) {
+            var nd = nodes[idx];
+            id2node[nd.id] = nd;
+        }
+
+        /* redRef is a reference to RED object, if this is available, it's set, if not we 
+            have to improvis. */
+        var RED = redRef;
+        if (!redRef) {
+            RED = {
+                nodes: {
+                    node: (nId) => { return id2node[nId] },
+                    subflow: (nId) => { return id2node[nId] }
+                },
+            }
+        }
+
+        var escapeForMermaid = (str) => {
+            return str.replaceAll(
+                "&", "&amp;"
+            ).replaceAll(
+                "#", "#35;"
+            ).replaceAll(
+                "[", "#91;"
+            ).replaceAll(
+                "]", "#93;"
+            ).replaceAll(
+                "(", "#40;"
+            ).replaceAll(
+                ")", "#41;"
+            ).replaceAll(
+                "|", "#124;"
+            ).replaceAll(
+                ">", "&gt;"
+            ).replaceAll(
+                "<", "&lt;"
+            ).replaceAll(
+                "{", "#123;"
+            ).replaceAll(
+                "}", "#125;"
+            ).replaceAll(
+                "/", "#47;"
+            )
+        };
+
+        var node2label = (nd, nme = undefined) => {
+            var labl = nd.name || nd.type;
+
+            if (nme) {
+                nme = "|" + escapeForMermaid(nme) + "| "
+            } else { nme = "" }
+
+            labl = escapeForMermaid(labl);
+
+            switch (nd.type) {
+                case "switch":
+                case "join":
+                case "split":
+                    return nme + nd.id + "{\"" + labl + "\"}"
+
+                case "link call":
+                case "link out":
+                    if (nd.mode && nd.mode == "return") {
+                        return nme + nd.id + "[\\Link Return/]"
+                    }
+
+                    if (nd.name && !nd.name.match(/^link out/)) {
+                        return nme + nd.id + "\{\{\"" + labl + "\"\}\}"
+                    }
+
+                    if (nd.linkType == "dynamic") {
+                        labl = "\\Dynamic Target/"
+                        return nme + nd.id + "\{\{\"" + labl + "\"\}\}"
+                    }
+
+                    var targetNode = (nd.links && nd.links.length > 0 && (id2node[nd.links[0]] || RED.nodes.node(nd.links[0])));
+                    labl = escapeForMermaid((targetNode && targetNode.name) || nd.type)
+                    return nme + nd.id + "\{\{\"" + labl + "\"\}\}"
+
+                case "link in":
+                    labl = escapeForMermaid(nd.name || (nd.links && nd.links.length > 0 && id2node[nd.links[0]] && id2node[nd.links[0]].name) || nd.type)
+                    return nme + nd.id + "\{\{\"" + labl + "\"\}\}"
+
+                case "junction":
+                    return nme + nd.id + "((\"" + labl + "\"))"
+
+                case "debug":
+                    return nme + nd.id + "(\"" + labl + "\")"
+
+                default:
+                    if (nd.type.startsWith("subflow:")) {
+                        var targetNode = RED.nodes.subflow(nd.type.replace(/subflow:/, ''))
+                        labl = escapeForMermaid((targetNode && targetNode.name) || nd.type)
+                    }
+
+                    return nme + nd.id + "[\"" + labl + "\"]"
+            }
+        }
+
+        /* 
+          we attach the mermaid array on the msg object because if an exception
+          happens, we can check how far this code got. That is by comparing the
+          contents of this array with the payload, we know which node caused
+          the exception.
+        */
+        msg.mermaid = [
+            "%% change this to LR Node-RED like UML",
+            "graph " + direction
+        ];
+
+        for (var idx = 0; idx < nodes.length; idx++) {
+            var nde = nodes[idx];
+
+            if (nde.links && nde.links.length > 0 && nde.type == "link out") {
+                for (var ldx = 0; ldx < nde.links.length; ldx++) {
+                    /* link-out wire: only add a dashed link wire iff the node is included in this graph */
+                    if (id2node[nde.links[ldx]]) {
+                        msg.mermaid.push(
+                            node2label(nde) + " -.-> " + nde.links[ldx]
+                        )
+                    }
+                }
+            }
+
+            if (nde.wires && nde.wires.length > 0) {
+                if (nde.type == "switch") {
+                    for (var odx = 0; odx < nde.wires.length; odx++) {
+                        for (var wdx = 0; wdx < nde.wires[odx].length; wdx++) {
+                            msg.mermaid.push(
+                                node2label(nde) + " --> " + node2label(id2node[nde.wires[odx][wdx]], nde.rules[odx] && (nde.rules[odx].v || nde.rules[odx].t))
+                            )
+                        }
+                    }
+                } else {
+                    var outputLabels = nde.outputLabels;
+                    if (nde.type.startsWith("subflow:")) {
+                        var targetNode = RED.nodes.subflow(nde.type.replace(/subflow:/, ''))
+                        outputLabels = (targetNode && targetNode.outputLabels) || outputLabels
+                    }
+
+                    for (var odx = 0; odx < nde.wires.length; odx++) {
+                        for (var wdx = 0; wdx < nde.wires[odx].length; wdx++) {
+                            msg.mermaid.push(
+                                node2label(nde) + " --> " + node2label(id2node[nde.wires[odx][wdx]], (outputLabels && outputLabels[odx]) || undefined)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        return msg.mermaid.join("\n");
+    }
+
+    window.FlowToMermaid = {
+        constructMermaid: constructMermaid
+    }
+})();
+  
+   function obtainCurrentActiveFlow() {
+      var activeWorkspace = RED.workspaces.active();
+      var nodes = RED.nodes.groups(activeWorkspace);
+
+      nodes = nodes.concat(RED.nodes.junctions(activeWorkspace));
+      nodes = nodes.concat(RED.nodes.filterNodes({ z: activeWorkspace }));
+
+      RED.nodes.eachConfig(function (n) {
+        if (n.z === RED.workspaces.active() && n._def.hasUsers === false) {
+          // Grab any config nodes scoped to this flow that don't
+          // require any flow-nodes to use them
+          nodes.push(n);
+        }
+      });
+
+      var parentNode = RED.nodes.workspace(
+        activeWorkspace
+      ) || RED.nodes.subflow(activeWorkspace);
+
+      nodes.unshift(parentNode);
+
+      return RED.nodes.createExportableNodeSet(nodes)
+   };
+
+   function ensureYourConfigNodeExists() {
+      // This function makes sure there is 1 instance of your config node is available, and that the globalYourConfigNode variable refers to it.
+      // Explained in the next step of this tutorial... --> https://discourse.nodered.org/t/tutorial-create-a-sidebar-plugin-and-persist-the-data-in-a-config-node/82020
+
+      // If we had found it previously, check if it has been deleted by the user behind our back
+      if (globalYourConfigNode !== null) {
+         var configNode = RED.nodes.node(globalYourConfigNode.id);
+         if (configNode === null) { globalYourConfigNode = null; }
+      }
+
+      // If not found previously, let's go find it
+      if (globalYourConfigNode === null) {
+         var configNodes = [];
+         RED.nodes.eachConfig(function(configNode) {
+             if (configNode.type === 'Flow2Mermaid') { 
+                 configNodes.push(configNode); 
+             }
+         });
+
+         // Make sure we only have 1 config node
+         while (configNodes.length > 1) {
+             var configNode = configNodes.pop();
+             RED.nodes.remove(configNode.id);
+             RED.nodes.dirty(true);
+         }
+
+         // When we found a config node, let's use that one
+         if (configNodes.length === 1) { globalYourConfigNode = configNodes[0]; }
+      }
+
+      // When it doesn't exist yet, create it if required
+      if (globalYourConfigNode === null) {
+         // Remark: since this config node is dynamically created (and only used in this sidebar which isn't another node), the config
+         // node is in fact "unused".  But since we don't want it to appear "unused" in the "config nodes" panel, we need to set hasUsers
+         // to false (see https://github.com/node-red/node-red/blob/master/CHANGELOG.md#0161-maintenance-release).
+         // The hasUsers needs also to be specified in the RED.nodes.registerType statement!
+         globalYourConfigNode = {
+             id: RED.nodes.id(), // on the server side, this is called RED.util.generateId()
+             _def: RED.nodes.getType("Flow2MermaidCfg"),
+             type: "Flow2MermaidCfg",
+             hasUsers: false, 
+             users: [],
+             name: "Flow2Mermaid",
+             label: function() { return this.name || "Flow2Mermaid"},
+             /* values and data defined by this config node */
+             direction: "TB", // Default data
+         }
+
+         // Add the new config node to the collection of Node-RED nodes
+         RED.nodes.add(globalYourConfigNode);
+
+         // Make sure the "Deploy" button becomes active
+         RED.nodes.dirty(true);
+      }      
+   }
+
+   // Add your plugin as a new tabsheet in the right sidebar AFTER the flow editor is completely started
+   var initialiseConfigNodeOnce = () => {
+      RED.events.off('runtime-state', initialiseConfigNodeOnce);
+
+      // The html content of the sidebar has been specified below as a data-template, from where it can be loaded:
+      var content = $($('script[type="text/x-red"][data-template-name="Flow2Mermaid"]').i18n().html());
+    
+      // Add a "Your sidebar" tabsheet to the right sidebar panel, in which this sidebar panel can be displayed
+      // --> more details: https://nodered.org/docs/api/ui/sidebar/
+      RED.sidebar.addTab({
+         id: "Flow2Mermaid",
+         label: "Flow to UML", // short name for the tab
+         name: "Flow to UML", // long name for the menu
+         content: content,
+         closeable: true,
+         // disableOnEdit: true,
+         enableOnEdit: true,
+         iconClass: "fa fa-shower" // your fontawesome icon
+      });
+
+      ensureYourConfigNodeExists();
+
+      var doSomething = (e) => {
+         if (e) { e.preventDefault(); }
+
+         var mermaidTxt = FlowToMermaid.constructMermaid(obtainCurrentActiveFlow(), globalYourConfigNode.direction, RED);
+         
+         RED.clipboard.copyText(mermaidTxt)
+         // console.log( mermaidTxt )
+
+         RED.notify("Mermaid UML has been copied to pasteboard.", "success");
+      }
+
+      $('#node-input-generate-diagram-but').on('click', (e) => {
+         doSomething(e);
+      })
+
+      /* name of action will become "My Sidebar Action", label is generated
+         from action name - see https://nodered.org/docs/api/ui/actions/ */
+      RED.actions.add("flow2mermaid:convert-flow-to-uml",function() {
+        doSomething();
+      });
+
+      // At startup load your config node data into the plugin sidebar html elements
+      $('#node-input-direction').val(globalYourConfigNode.direction)
+
+      // When the user has entered new data in the sidebar, then store it into the config node
+      $("#node-input-direction").on("change", function() {
+        ensureYourConfigNodeExists();
+
+        let data = $(this).val();
+
+         if (globalYourConfigNode.direction != data) {
+            globalYourConfigNode.direction = data;
+            // Since the config node has been updated, the 'Deploy' button should become active
+            RED.nodes.dirty(true);
+         }
+      })
+   };
+   RED.events.on('runtime-state', initialiseConfigNodeOnce);
+})();
+</script>
+
+<!-- The html for the right sidebar plugin screen -->
+<script type="text/x-red" data-template-name="Flow2Mermaid">
+
+<div class="form-row" style="margin-left: 15px; margin-top: 30px;">
+   <label for="node-input-direction"><i class="fa fa-tag"></i> Direction</label>
+   <select id="node-input-direction">
+        <option value="TB">Top to Bottom</option>
+        <option value="LR">Left to Right</option>
+      </select>
+</div>
+
+<div class="form-row" style="margin-left: 15px;">
+   <button id="node-input-generate-diagram-but"
+           class="red-ui-button">Generate Mermaid Diagram</button>
+</div>
+</script>

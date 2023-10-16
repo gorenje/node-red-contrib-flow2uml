@@ -1,18 +1,6 @@
-module.exports = function(RED) {
-  function Flow2MermaidFunctionality(config) {
-    RED.nodes.createNode(this,config);
-
-    var node = this;
-    var cfg = config;
-
-    node.on('close', function() {
-      node.status({});
-    });
-
-    node.on("input", function(msg, send, done) {
-        send(msg);
-        done();
-    });
+module.exports = function (RED) {
+  function ConfigFlow2MermaidFunctionality(config) {
+    RED.nodes.createNode(this, config)
   }
-  RED.nodes.registerType("Flow2UML", Flow2MermaidFunctionality);
+  RED.nodes.registerType('Flow2MermaidCfg', ConfigFlow2MermaidFunctionality);
 }

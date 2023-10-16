@@ -1,20 +1,28 @@
 ## Flow to UML (Mermaid flowchart)
 
-Convert the current flow tab to a Mermaid flowchart diagram.
+Convert the current flow tab to a Mermaid UML flowchart diagram.
 
-**Warning**: will replace the contents the *info* panel of the node.
+**Warning**: will replace the contents of the clipboard, aka pasteboard.
 
-Also this is best used with Node-RED 3.1.x because that has inbuilt support for rendering [Mermaid](https://mermaid.js.org/) diagrams.
+Also this is best used with Node-RED 3.1.x because that has inbuilt support for rendering [Mermaid](https://mermaid.js.org/) diagrams. The generated UML can then be pasted to the info box for the flow.
 
 ## Generating diagram
 
-In the property panel, hit the generate button:
+Either use the Action List drop down, selecting *Convert flow to UML*:
 
-![img](https://cdn.openmindmap.org/content/1696066692869_Screen_Shot_2023-09-30_at_11.35.14.png)
+![img](https://cdn.openmindmap.org/content/1697468701824_Screen_Shot_2023-10-16_at_17.04.58.png)
 
-Save the changes by clicking done and then there should be an image in the info box:
+Or using the sidebar, first select the *Flow to UML* menu point
 
-![img](https://cdn.openmindmap.org/content/1696066701424_Screen_Shot_2023-09-30_at_11.37.53.png)
+![img](https://cdn.openmindmap.org/content/1697469135942_Screen_Shot_2023-10-16_at_17.06.39.png)
+
+Then select a drection - either TB - top to bottom or LR - left to right:
+
+![img](https://cdn.openmindmap.org/content/1697468872117_Screen_Shot_2023-10-16_at_17.06.48.png)
+
+After that the generate button will copy the UML to the pasteboard:
+
+![img](https://cdn.openmindmap.org/content/1697468819760_Screen_Shot_2023-10-16_at_17.06.54.png)
 
 ## Discussion
 
@@ -22,17 +30,9 @@ This is a purely editor-based node with no interaction with the Node-RED server.
 
 ## Mermaid Syntax
 
-Beaware that Node-RED supports v9.4.3 of Mermaid and that the the [live editor](https://mermaid.live), at time of writing, at 10.4.0 - there are differences.
+Beaware that Node-RED supports v9.4.3 of Mermaid, the [Mermaid live editor](https://mermaid.live), at time of writing, stands at 10.4.0 - there are differences.
 
-If there is a syntax error:
-
-![img](https://cdn.openmindmap.org/content/1696066496021_Screen_Shot_2023-09-30_at_11.34.31.png)
-
-Then you can edit the Mermaid code in the info tab:
-
-![img](https://cdn.openmindmap.org/content/1696066696690_Screen_Shot_2023-09-30_at_11.35.57.png)
-
-Save the changes and the info box will either show the image or not.
+Also the Node-RED editor sometimes shows an Mermaid Syntax error that can be resolved by doing a reload - your mileage might vary.
 
 ### Artifacts
 
