@@ -2,10 +2,6 @@
 
 Convert the current flow tab to a Mermaid UML flowchart diagram.
 
-**Warning**: will replace the contents of the clipboard, aka pasteboard.
-
-Also this is best used with Node-RED 3.1.x because that has inbuilt support for rendering [Mermaid](https://mermaid.js.org/) diagrams. The generated UML can then be pasted to the info box for the flow.
-
 ## Generating diagram
 
 Either use the Action List drop down, selecting *Convert flow to UML*:
@@ -16,23 +12,23 @@ Or using the sidebar, first select the *Flow to UML* menu point
 
 ![img](https://cdn.openmindmap.org/content/1697469135942_Screen_Shot_2023-10-16_at_17.06.39.png)
 
-Then select a drection - either TB - top to bottom or LR - left to right:
+Then select a drection - either TB - top to bottom or LR - left to right and press the generate button:
 
-![img](https://cdn.openmindmap.org/content/1697468872117_Screen_Shot_2023-10-16_at_17.06.48.png)
+![img](https://cdn.openmindmap.org/content/1700942716281_Screen_Shot_2023-11-25_at_20.59.24.png)
 
-After that the generate button will copy the UML to the pasteboard:
+There is a link to the [mermaid.live](https://mermaid.live) editor, the link incorporates the currently generated Mermaid diagram. This link is updated with each click on the generate button.
 
-![img](https://cdn.openmindmap.org/content/1697468819760_Screen_Shot_2023-10-16_at_17.06.54.png)
+## Link to Mermaid.live
+
+There is now a direct link to the Mermaid live editor with the UML diagram generated from the flow:
+
+![img](https://cdn.openmindmap.org/content/1700942167953_flow2uml.gif)
 
 ## Discussion
 
 This is a purely editor-based node with no interaction with the Node-RED server. The diagram generated is based on the current flow in the editor not the flow that has been deployed. Therefore any changes made in the editor will be reflected in the diagram generated.
 
-## Mermaid Syntax
-
-Beaware that Node-RED supports v9.4.3 of Mermaid, the [Mermaid live editor](https://mermaid.live), at time of writing, stands at 10.4.0 - there are differences.
-
-Also the Node-RED editor sometimes shows an Mermaid Syntax error that can be resolved by doing a reload - your mileage might vary.
+This allows for the construction of flows in the editor that can be used for Mermaid diagrams *but* that are not deployed to the server.
 
 ### Artifacts
 
