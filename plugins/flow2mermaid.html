@@ -29,6 +29,12 @@
    };
 
    function getMermaidLink(mermaidTxt) {
+      /* 
+       * this snippet isn't taken from
+       *   https://github.com/mermaid-js/mermaid-live-editor/blob/develop/src/lib/util/serde.ts
+       * but it comes from there. Using base64 instead of pako because
+       * base64 does not require installing any extras.
+       */
       let payload = {
          "code":mermaidTxt,
          "mermaid":"{\n  \"theme\": \"default\"\n}",
@@ -87,8 +93,8 @@
              type: "Flow2MermaidCfg",
              hasUsers: false, 
              users: [],
-             name: "Flow2Mermaid",
-             label: function() { return this.name || "Flow2Mermaid"},
+             name: "Flow2Uml",
+             label: function() { return this.name || "Flow2Uml"},
              /* values and data defined by this config node */
              direction: "TB", // Default data
              genmereditor: ""
@@ -123,7 +129,12 @@
       });
 
       ensureYourConfigNodeExists();
-      
+      /* Upgrading node causes errors here since the genmereditor attribute is defined on the "old" config
+         node. Hence define it here incase this is the "old" config ndoe. The new config node has this
+         attribute *but* has the same type so the new config isn't installed.
+      */
+      if ( !globalYourConfigNode.genmereditor ) { globalYourConfigNode.genmereditor = ""; RED.nodes.dirty(true); }
+
       $('#node-input-genmereditor-mermaid-code').html("<code>" + globalYourConfigNode.genmereditor.replaceAll("\n","<br>") + "</code>");
       $('#node-input-genmereditor-mermaid-code').data('mermaid', btoa(globalYourConfigNode.genmereditor))
       $('#genmermaid-view-uml-link').attr('href', getMermaidLink(globalYourConfigNode.genmereditor));
