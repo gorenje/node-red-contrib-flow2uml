@@ -159,12 +159,25 @@
       var doSomething = (e) => {
          if (e) { e.preventDefault(); }
          ensureYourConfigNodeExists();
-         var mermaidTxt = FlowToMermaid.constructMermaid(obtainCurrentActiveFlow(), globalYourConfigNode.direction, RED);
 
-         $('#node-input-genmereditor-mermaid-code').html("<code>" + mermaidTxt.replaceAll("\n","<br>") + "</code>");
-         $('#node-input-genmereditor-mermaid-code').data('mermaid', btoa(mermaidTxt))
+         var mermaidTxt = FlowToMermaid.constructMermaid(obtainCurrentActiveFlow(), globalYourConfigNode.direction, RED);         
+
+         try {
+            /*
+            * using encode and unescape here becuase the contents can cause an error:
+            * ==> Uncaught DOMException: String contains an invalid character
+            * from Stackoverflow, unescape & encode can fix that:
+            * ==> https://stackoverflow.com/questions/23223718/failed-to-execute-btoa-on-window-the-string-to-be-encoded-contains-characte
+            * But this can alter the text because the encoding isn't Utf8 but encode & unescape forces the encoding to become Utf8.
+            */
+            $('#node-input-genmereditor-mermaid-code').data('mermaid', btoa(mermaidTxt))
+         } catch (ex) {
+            mermaidTxt = unescape(encodeURIComponent(mermaidTxt))
+            $('#node-input-genmereditor-mermaid-code').data('mermaid', btoa(mermaidTxt))
+         }
 
          $('#genmermaid-view-uml-link').attr('href', getMermaidLink(mermaidTxt));
+         $('#node-input-genmereditor-mermaid-code').html("<code>" + mermaidTxt.replaceAll("\n","<br>") + "</code>");
       }
 
       RED.actions.remove("flow2mermaid:convert-flow-to-uml")
