@@ -172,12 +172,20 @@
             */
             $('#node-input-genmereditor-mermaid-code').data('mermaid', btoa(mermaidTxt))
          } catch (ex) {
-            mermaidTxt = unescape(encodeURIComponent(mermaidTxt))
-            $('#node-input-genmereditor-mermaid-code').data('mermaid', btoa(mermaidTxt))
+            $('#node-input-genmereditor-mermaid-code').data('mermaid', btoa(unescape(encodeURIComponent(mermaidTxt))))
          }
 
-         $('#genmermaid-view-uml-link').attr('href', getMermaidLink(mermaidTxt));
-         $('#node-input-genmereditor-mermaid-code').html("<code>" + mermaidTxt.replaceAll("\n","<br>") + "</code>");
+         try {
+            $('#genmermaid-view-uml-link').attr('href', getMermaidLink(mermaidTxt));
+         } catch (ex ) {
+            $('#genmermaid-view-uml-link').attr('href', getMermaidLink(unescape(encodeURIComponent(mermaidTxt))))
+         }
+
+         try {
+            $('#node-input-genmereditor-mermaid-code').html("<code>" + mermaidTxt.replaceAll("\n","<br>") + "</code>");
+         } catch ( ex ) {
+            $('#node-input-genmereditor-mermaid-code').html("<code>" + unescape(encodeURIComponent(mermaidTxt)).replaceAll("\n","<br>") + "</code>");
+         }
       }
 
       RED.actions.remove("flow2mermaid:convert-flow-to-uml")
