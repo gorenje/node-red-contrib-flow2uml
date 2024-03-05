@@ -9,7 +9,7 @@
     "node-red", "uml", "mermaid"
   ],
 
-  "homepage": "https://github.com/gorenje/node-red-contrib-flow2uml#README.md",
+  "homepage": "https://flowhub.org/f/8e598f0f47194617",
   "license": "Don't do Evil. -> https://github.com/gorenje/node-red-contrib-flow2uml/blob/main/LICENSE",
   "author": "Gerrit Riessen <gerrit@openmindmap.org>",
   "engines": {
