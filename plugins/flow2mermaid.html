@@ -182,6 +182,11 @@
          }
 
          try {
+            $('#btn_genmersave').attr('href', "data:text/plain;base64," + btoa(mermaidTxt));
+         } catch (ex ) {
+         }
+
+         try {
             $('#node-input-genmereditor-mermaid-code').html("<code>" + mermaidTxt.replaceAll("\n","<br>") + "</code>");
          } catch ( ex ) {
             $('#node-input-genmereditor-mermaid-code').html("<code>" + unescape(encodeURIComponent(mermaidTxt)).replaceAll("\n","<br>") + "</code>");
@@ -358,7 +363,8 @@
 
       <!--form-row-->
       <div class="form-row" style="margin-left: 10px; margin-right: 15px;">
-            <button id="btn_genmersave" type="button" class="red-ui-button btn-regular"><i class="fa fa-save"></i> Save</button>
+            <a href="#" download="uml.txt" id="btn_genmersave" type="button"
+               class="red-ui-button btn-regular"><i class="fa fa-save"></i> Save</a>
             <button id="btn_genmercopy" style="margin-left: 40px;" type="button" class="red-ui-button btn-regular"><i class="fa fa-copy"></i> Copy to Clipboard</button>
             <a id="genmermaid-view-uml-link" style="color: blue; margin-left: 40px;" target="_blank" href="#">View UML <i class="fa fa-external-link"></i></a>
       </div>
