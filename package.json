@@ -22,7 +22,8 @@
       "sidebar-plugin": "plugins/flow2mermaid.html"
     },
     "nodes": {
-      "flowtomermaid": "nodes/flow2mermaid.js"
+      "flowtomermaid": "nodes/flow2mermaid.js",
+      "mermaid-flowchart": "nodes/mermaid-flowchart.js"
     }
   },
 

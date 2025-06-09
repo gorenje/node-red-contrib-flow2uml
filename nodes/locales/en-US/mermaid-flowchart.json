@@ -1,0 +1,62 @@
+{
+  "mermaid-flowchart": {
+
+
+    "label": {
+      "statusset": "Status Set",
+      "shape": "Shape",
+      "shapes": {
+        "notch-rect": "Notched Rectangle",
+        "hourglass": "Hourglass",
+        "bolt": "Lightning Bolt",
+        "brace": "Curly Brace",
+        "brace-r": "Curly Brace",
+        "braces": "Curly Braces",
+        "lean-r": "Lean Right",
+        "lean-l": "Lean Left",
+        "cyl": "Cylinder",
+        "diam": "Diamond",
+        "delay": "Half-Rounded Rectangle",
+        "h-cyl": "Horizontal Cylinder",
+        "lin-cyl": "Lined Cylinder",
+        "curv-trap": "Curved Trapezoid",
+        "div-rect": "Divided Rectangle",
+        "doc": "Document",
+        "rounded": "Rounded Rectangle",
+        "tri": "Triangle",
+        "fork": "Filled Rectangle",
+        "win-pane": "Window Pane",
+        "f-circ": "Filled Circle",
+        "lin-doc": "Lined Document",
+        "lin-rect": "Lined Rectangle",
+        "notch-pent": "Trapezoidal Pentagon",
+        "flip-tri": "Flipped Triangle",
+        "sl-rect": "Sloped Rectangle",
+        "trap-t": "Trapezoid Base Top",
+        "docs": "Stacked Document",
+        "st-rect": "Stacked Rectangle",
+        "odd": "Odd",
+        "flag": "Flag",
+        "hex": "Hexagon",
+        "trap-b": "Trapezoid Base Bottom",
+        "rect": "Rectangle",
+        "circle": "Circle",
+        "sm-circ": "Small Circle",
+        "dbl-circ": "Double Circle",
+        "fr-circ": "Framed Circle",
+        "bow-rect": "Bow Tie Rectangle",
+        "fr-rect": "Framed Rectangle",
+        "cross-circ": "Crossed Circle",
+        "tag-doc": "Tagged Document",
+        "tag-rect": "Tagged Rectangle",
+        "stadium": "Stadium",
+        "text": "Text Block"
+      }
+    },
+
+    "status": {
+      "waiting": "Waiting for Godot",
+      "timeout": "No more time to waiting"
+    }
+  }
+}

@@ -30,6 +30,15 @@ This is a purely editor-based node with no interaction with the Node-RED server.
 
 This allows for the construction of flows in the editor that can be used for Mermaid diagrams *but* that are not deployed to the server.
 
+## FlowChart Node
+
+Now includes a flow chart node for naming links and defining shapes.
+
+## Examples
+
+- [Flow2UML node](https://flowhub.org/f/f7a7f51fb024538f)
+- [Normal nodes](https://flowhub.org/f/666972381aaa960e)
+
 ### Artifacts
 
 - [Flow that maintains](https://flowhub.org/f/8e598f0f47194617) the codebase

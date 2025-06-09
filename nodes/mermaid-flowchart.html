@@ -1,0 +1,159 @@
+<script type="text/javascript">
+  (function(){
+  
+
+  function frontendSupportFunction() {
+  }
+
+  var functTwo = (arg) => {
+
+  };
+  
+  RED.nodes.registerType('mermaid-flowchart',{
+    color: '#C7E9C0',
+    icon: "font-awesome/fa-code-fork",
+    category: 'mermaid',
+    paletteLabel: 'Flowchart',
+    defaults: {
+      name: {
+        value:"",
+      },
+      shape: {
+        value:"rect"
+      },
+      wirecfgs: {
+        value: [{ name: "", id: "", arrow: "" }],
+      }
+    },
+
+    inputs: 1,
+
+    outputs: 1,
+
+    label: function() {
+      return (this.name || this._def.paletteLabel);
+    },
+
+    labelStyle: function() {
+      return this.name?"node_label_italic":"";
+    },
+
+    onpaletteadd: function() {
+    },
+
+    onpaletteremove: function() {
+    },
+
+    oneditprepare: function() {
+      var possibleArrows = ["arrow", "dotarrow", "thickarrow", "line"]
+
+      RED.nodes.getDownstreamNodes(RED.nodes.node(this.id)).forEach(nde => {
+          var currVal = this.wirecfgs.filter(d => d.id == nde.id)[0] || {};
+
+          var sltObj = $('<select>', {class: 'wirecfg-arrow', style: "width: 100px"} )
+          for (var idx = 0; idx < possibleArrows.length; idx++ ) {
+            let val = possibleArrows[idx]
+            let selected = val == currVal.arrow ? { selected: "selected" } : {}
+
+            sltObj.append( $( "<option>", { value: val, ...selected }).append(val) ) 
+          }
+          var container = $("<div>", { class: "wirecfg form-row", "data-id": nde.id });
+
+          var label = $('<label>', { for: "node-input-name" })
+          label.append('<i class="fa fa-tag"></i>&nbsp;')
+          label.append($("<span>").text(RED.utils.getNodeLabel(nde)))
+
+          container.append(label)
+          container.append( $('<input>', { style: 'width: 200px', class:'wirecfg-name', type: "text", placeholder: "Name", value: currVal.name }))
+
+          container.append( sltObj )
+
+          container.appendTo($('#node-input-wirecfgs-container'))
+      })
+    },
+
+    oneditcancel: function() {
+    },
+
+    oneditsave: function() {
+      let result = []
+      $($('#node-input-wirecfgs-container').find('.wirecfg')).each( (idx,elem) => {
+        result.push( { name: $(elem).find('.wirecfg-name').val(), id: $(elem).data("id"), arrow: $(elem).find('.wirecfg-arrow').val()})
+      })
+      this.wirecfgs = result
+    },
+
+    oneditresize: function(size) {
+    },
+
+
+  });
+})();
+
+</script>
+
+<script type="text/html" data-template-name="mermaid-flowchart">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name"></span></label>
+    <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-shape"><i class="fa fa-tag"></i> <span data-i18n="mermaid-flowchart.label.shape"></span></label>
+    <select id="node-input-shape">
+          <option value="stadium" data-i18n="mermaid-flowchart.label.shapes.stadium"></option>
+          <option value="rounded" data-i18n="mermaid-flowchart.label.shapes.rounded"></option>
+          <option value="rect" data-i18n="mermaid-flowchart.label.shapes.rect"></option>
+          <option value="circle" data-i18n="mermaid-flowchart.label.shapes.circle"></option>
+          <option value="sm-circ" data-i18n="mermaid-flowchart.label.shapes.sm-circ"></option>
+          <option value="dbl-circ" data-i18n="mermaid-flowchart.label.shapes.dbl-circ"></option>
+          <option value="fr-circ" data-i18n="mermaid-flowchart.label.shapes.fr-circ"></option>
+          <option value="bow-rect" data-i18n="mermaid-flowchart.label.shapes.bow-rect"></option>
+          <option value="fr-rect" data-i18n="mermaid-flowchart.label.shapes.fr-rect"></option>
+          <option value="cross-circ" data-i18n="mermaid-flowchart.label.shapes.cross-circ"></option>
+          <option value="tag-doc" data-i18n="mermaid-flowchart.label.shapes.tag-doc"></option>
+          <option value="tag-rect" data-i18n="mermaid-flowchart.label.shapes.tag-rect"></option>
+          <option value="text" data-i18n="mermaid-flowchart.label.shapes.text"></option>
+          <option value="notch-rect" data-i18n="mermaid-flowchart.label.shapes.notch-rect"></option>
+          <option value="hourglass" data-i18n="mermaid-flowchart.label.shapes.hourglass"></option>
+          <option value="bolt" data-i18n="mermaid-flowchart.label.shapes.bolt"></option>
+          <option value="brace" data-i18n="mermaid-flowchart.label.shapes.brace"></option>
+          <option value="brace-r" data-i18n="mermaid-flowchart.label.shapes.brace-r"></option>
+          <option value="braces" data-i18n="mermaid-flowchart.label.shapes.braces"></option>
+          <option value="lean-r" data-i18n="mermaid-flowchart.label.shapes.lean-r"></option>
+          <option value="lean-l" data-i18n="mermaid-flowchart.label.shapes.lean-l"></option>
+          <option value="cyl" data-i18n="mermaid-flowchart.label.shapes.cyl"></option>
+          <option value="diam" data-i18n="mermaid-flowchart.label.shapes.diam"></option>
+          <option value="delay" data-i18n="mermaid-flowchart.label.shapes.delay"></option>
+          <option value="h-cyl" data-i18n="mermaid-flowchart.label.shapes.h-cyl"></option>
+          <option value="lin-cyl" data-i18n="mermaid-flowchart.label.shapes.lin-cyl"></option>
+          <option value="curv-trap" data-i18n="mermaid-flowchart.label.shapes.curv-trap"></option>
+          <option value="div-rect" data-i18n="mermaid-flowchart.label.shapes.div-rect"></option>
+          <option value="doc" data-i18n="mermaid-flowchart.label.shapes.doc"></option>
+          <option value="tri" data-i18n="mermaid-flowchart.label.shapes.tri"></option>
+          <option value="fork" data-i18n="mermaid-flowchart.label.shapes.fork"></option>
+          <option value="win-pane" data-i18n="mermaid-flowchart.label.shapes.win-pane"></option>
+          <option value="f-circ" data-i18n="mermaid-flowchart.label.shapes.f-circ"></option>
+          <option value="lin-doc" data-i18n="mermaid-flowchart.label.shapes.lin-doc"></option>
+          <option value="lin-rect" data-i18n="mermaid-flowchart.label.shapes.lin-rect"></option>
+          <option value="notch-pent" data-i18n="mermaid-flowchart.label.shapes.notch-pent"></option>
+          <option value="flip-tri" data-i18n="mermaid-flowchart.label.shapes.flip-tri"></option>
+          <option value="sl-rect" data-i18n="mermaid-flowchart.label.shapes.sl-rect"></option>
+          <option value="trap-t" data-i18n="mermaid-flowchart.label.shapes.trap-t"></option>
+          <option value="docs" data-i18n="mermaid-flowchart.label.shapes.docs"></option>
+          <option value="st-rect" data-i18n="mermaid-flowchart.label.shapes.st-rect"></option>
+          <option value="odd" data-i18n="mermaid-flowchart.label.shapes.odd"></option>
+          <option value="flag" data-i18n="mermaid-flowchart.label.shapes.flag"></option>
+          <option value="hex" data-i18n="mermaid-flowchart.label.shapes.hex"></option>
+          <option value="trap-b" data-i18n="mermaid-flowchart.label.shapes.trap-b"></option>
+      </select>
+  </div>
+
+  <div class="form-row">
+    Wires
+  </div>
+
+  <div class="form-row">
+    <div id="node-input-wirecfgs-container"></div>
+  </div>
+</script>
