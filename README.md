@@ -39,6 +39,7 @@ Now includes a flow chart node for naming links and defining shapes.
 - [Flow2UML node](https://flowhub.org/f/f7a7f51fb024538f)
 - [Normal nodes](https://flowhub.org/f/666972381aaa960e)
 - Group support including [nested groups](https://flowhub.org/f/4c19635d7c95e596)
+- [Multiple labels](https://flowhub.org/f/ee56b79ce65025e8) for single wires
 
 ### Artifacts
 
