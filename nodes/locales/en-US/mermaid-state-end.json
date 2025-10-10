@@ -1,0 +1,14 @@
+{
+  "mermaid-state-end": {
+
+
+    "label": {
+      "statusset": "Status Set"
+    },
+
+    "status": {
+      "waiting": "Waiting for Godot",
+      "timeout": "No more time to waiting"
+    }
+  }
+}

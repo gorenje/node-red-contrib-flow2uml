@@ -23,7 +23,11 @@
     },
     "nodes": {
       "flowtomermaid": "nodes/flow2mermaid.js",
-      "mermaid-flowchart": "nodes/mermaid-flowchart.js"
+      "mermaid-flowchart": "nodes/mermaid-flowchart.js",
+
+      "mermaid-state-start": "nodes/mermaid-state-start.js",
+      "mermaid-state-state": "nodes/mermaid-state-state.js",
+      "mermaid-state-end": "nodes/mermaid-state-end.js"
     }
   },
 

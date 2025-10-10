@@ -15,7 +15,7 @@
       },
       wirecfgs: {
         value: [{ name: "", id: "", arrow: "" }],
-      }
+      }      
     },
 
     inputs: 1,
@@ -30,6 +30,11 @@
       return this.name?"node_label_italic":"";
     },
 
+    // called when node is added to workspace also if copied and pasted.
+    onadd: function() {
+    },
+    
+    // called when node type added to palette-bar
     onpaletteadd: function() {
     },
 
@@ -37,6 +42,7 @@
     },
 
     oneditprepare: function() {
+      let that = this;
 
       var possibleArrows = [
         "--", "-.-", "==",
@@ -47,10 +53,10 @@
         "--o", "-.-o", "==o",
         "o--o", "o-.-o", "o==o",
       ]
-      var allOurWires = [this.id];
+      var allOurWires = [this.id, "self"];
 
       let addConfigField = (nde, currVal) => {
-        var sltObj = $('<select>', { class: 'wirecfg-arrow', style: "max-width: 100px" })
+        var sltObj = $('<select>', { class: 'wirecfg-arrow', style: "max-width: 100px; margin-left: 5px;" })
 
         for (var idx = 0; idx < possibleArrows.length; idx++) {
           let val = possibleArrows[idx]
@@ -60,11 +66,15 @@
         }
 
         var container = $("<div>", { class: "wirecfg form-row", "data-id": nde.id });
+
         container.append('<a href="#" style="float: right; color: red;" onclick="$(this).parent().remove(); return false;"><i class="fa fa-close"></i></a>')
+
         container.append('<a href="#" style="float: right; margin-right: 10px; color: green;" onclick="$(\'#node-input-wirecfgs-container\').append($(this).parent().clone()); return false;"><i class="fa fa-plus"></i></a>')
 
         var label = $('<label>', { for: "node-input-name", "data-id": nde.id, onmouseover: "RED.view.reveal($(this).data('id'),true);RED.view.redraw();", onmouseout: "RED.view.redraw();" })
+
         label.append('<i class="fa fa-tag"></i>&nbsp;')
+
         label.append($("<span>").text(RED.utils.getNodeLabel(nde) + (nde.id == this.id ? " (self)" : "")))
 
         container.append(label)
@@ -84,18 +94,17 @@
       })
 
       this.wirecfgs.sort( (a,b) => a.id < b.id ).forEach( currVal => {
-        let nde = RED.nodes.node(currVal.id)
+        let nde = RED.nodes.node(currVal.id == "self" ? that.id : currVal.id)
         
         // support older versions
         currVal.arrow = { "arrow": "-->", "thickarrow": "==>", "line": "--", "dotarrow": "-.->" }[currVal.arrow] || currVal.arrow;
 
-        if ( !nde ) { return }
-        if ( allOurWires.indexOf(currVal.id) < 0 ) { return }
+        /* if ( !nde ) { return } */
+        /* if ( allOurWires.indexOf(currVal.id) < 0 ) { return } */
 
-        addConfigField(nde, currVal)
+        addConfigField(nde || that, currVal)
       })
 
-      let that = this;
       $('#node-input-add-self-button').on('click', (e) => {
         e.preventDefault();
         addConfigField(that, { id: that.id, name: "", arrow: "-->" })
@@ -106,9 +115,14 @@
     },
 
     oneditsave: function() {
+      let that = this;
       let result = []
       $($('#node-input-wirecfgs-container').find('.wirecfg')).each( (idx,elem) => {
-        result.push( { name: $(elem).find('.wirecfg-name').val(), id: $(elem).data("id"), arrow: $(elem).find('.wirecfg-arrow').val()})
+        result.push( { 
+          name: $(elem).find('.wirecfg-name').val(), 
+          id: $(elem).data("id") == that.id ? "self" : $(elem).data("id"), 
+          arrow: $(elem).find('.wirecfg-arrow').val()
+        })
       })
       this.wirecfgs = result
     },
@@ -184,7 +198,7 @@
   </div>
 
   <div class="form-row">
-    <button class='button' id='node-input-add-self-button'>Add Self</button>
+    <button class='red-ui-button' id='node-input-add-self-button'>Add Self</button>
   </div>
 
   <div class="form-row">
