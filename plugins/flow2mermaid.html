@@ -253,17 +253,31 @@
          
          let statemDef = FlowToMermaid.constructErlangStatem(obtainCurrentActiveFlow());
 
-         try {
-            $('#node-input-genmereditor-mermaid-code').data('mermaid', btoa(statemDef))
-         } catch (ex) {
-            $('#node-input-genmereditor-mermaid-code').data('mermaid', btoa(unescape(encodeURIComponent(statemDef))))
+         let moduleName = `statem_def_${RED.nodes.id()}`
+
+         let nde = {
+            "id": RED.nodes.id(),
+            "type": "erlmodule",
+            "name": moduleName,
+            "module_name": moduleName,
+            "code": atob("LW1vZHVsZSglJSBNT0RVTEUgTkFNRSAlJSkuCgolJQolJSAgQVBJczogaHR0cHM6Ly93d3cuZXJsYW5nLm9yZy9kb2MvYXBwcy9zdGRsaWIvZ2VuX3N0YXRlbS5odG1sCiUlCgotYmVoYXZpb3VyKGdlbl9zdGF0ZW0pLgoKLWV4cG9ydChbCiAgICBzdGFydC8wLAogICAgaW5pdC8xLAogICAgY2FsbGJhY2tfbW9kZS8wLAogICAgaGFuZGxlX2V2ZW50LzQsCiAgICBjb2RlX2NoYW5nZS80LAogICAgdGVybWluYXRlLzMsCiAgICBzdG9wLzAKXSkuCgolJSBXQVJOSU5HOiBzdGF0ZV9mdW5jdGlvbnMgYXJlIG5vdCBzdXBwb3J0ZWQgYnkgc3RhdGVtYWNoaW5lIG5vZGUuCiUlIGNhbGxiYWNrX21vZGUoKSAtPiBzdGF0ZV9mdW5jdGlvbnMuCmNhbGxiYWNrX21vZGUoKSAtPiBoYW5kbGVfZXZlbnRfZnVuY3Rpb24uCgotZGVmaW5lKEtFRVBfU1RBVEUoUmVwbHlXaXRoKSwKICAgIHtrZWVwX3N0YXRlLCBEYXRhLCBbe3JlcGx5LCBGcm9tLCBSZXBseVdpdGh9XX0KKS4KCnN0YXJ0KCkgLT4KICAgIGdlbl9zdGF0ZW06c3RhcnQoe2xvY2FsLCA/TU9EVUxFfSwgP01PRFVMRSwgW10sIFtdKS4KCnN0b3AoKSAtPgogICAgZ2VuX3N0YXRlbTpzdG9wKD9NT0RVTEUpLgp0ZXJtaW5hdGUoX1JlYXNvbiwgX1N0YXRlLCBfRGF0YSkgLT4KICAgIHZvaWQuCmNvZGVfY2hhbmdlKF9Wc24sIFN0YXRlLCBEYXRhLCBfRXh0cmEpIC0+CiAgICB7b2ssIFN0YXRlLCBEYXRhfS4KCiUlIEluaXRpYWwgc3RhdGUgYW5kIGRhdGEKaW5pdChbXSkgLT4KICAgIFN0YXRlID0gaWRsZSwgCiAgICBEYXRhID0gMCwKICAgIHtvayxTdGF0ZSxEYXRhfS4KCiUlJSBoYW5kbGUgZXZlbnQgZnVuY3Rpb24KCiUlJSUlJSBSRVBMQUNFIFdJVEggQ09ERSBIRVJFICUlJSUlCiAgICAgICAgICAgICAgICAgICAgICAgIAolJSBGYWxsIHRocm91Z2gKaGFuZGxlX2V2ZW50KAogIHtjYWxsLCBGcm9tfSwKICBfQWN0aW9uLAogIF9DdXJyU3RhdGUsCiAgRGF0YQopIC0+CiAgICA/S0VFUF9TVEFURShpZ25vcmVkKTsKCgolJSUgQWJzb2x1dGUgZmFsbCB0aHJvdWdoCmhhbmRsZV9ldmVudChFdmVudFR5cGUsIFN0aWZmLCBTdGF0ZSwgRGF0YSkgLT4KICAgIGlvOmZvcm1hdCgiVEVTVCA6IH5wIH5wIH5wIH5wfm4iLFtFdmVudFR5cGUsIFN0aWZmLCBTdGF0ZSwgRGF0YV0pLAogICAge2tlZXBfc3RhdGUsIERhdGF9Lgo=").replace("%%%%%% REPLACE WITH CODE HERE %%%%%", statemDef).replace("%% MODULE NAME %%", moduleName),
+            "wires": []
          }
 
-         try {
-            $('#node-input-genmereditor-mermaid-code').html("<code>" + statemDef.replaceAll("\n","<br>").replaceAll(" ","&nbsp;") + "</code>");
-         } catch ( ex ) {
-            $('#node-input-genmereditor-mermaid-code').html("<code>" + unescape(encodeURIComponent(statemDef)).replaceAll("\n","<br>").replaceAll(" ","&nbsp;") + "</code>");
+         if (!RED.nodes.getType("erlmodule")) {
+            nde.type      = "template"
+            nde.format    = "text"
+            nde.field     = moduleName
+            nde.fieldType = "msg"
+            nde.syntax    = "plain"
+            nde.template  = nde.code
+            nde.output    =  "str"
+            
+            delete nde.code
+            delete nde.module_name
          }
+         
+         RED.view.importNodes([nde])
       })
 
       $('#node-input-generate-and-view-diagram-but').on('click', (e) => {
