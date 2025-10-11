@@ -3,6 +3,7 @@
 
 
     "label": {
+      "add_keep_state": "Add Self",
       "statusset": "Status Set",
       "shape": "Shape",
       "shapes": {

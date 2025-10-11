@@ -73,9 +73,13 @@
 
         var label = $('<label>', { for: "node-input-name", "data-id": nde.id, onmouseover: "RED.view.reveal($(this).data('id'),true);RED.view.redraw();", onmouseout: "RED.view.redraw();" })
 
-        label.append('<i class="fa fa-tag"></i>&nbsp;')
-
-        label.append($("<span>").text(RED.utils.getNodeLabel(nde) + (nde.id == this.id ? " (self)" : "")))
+        if (nde.id == this.id) {
+          label.append('<i class="fa fa-rotate-right"></i>&nbsp;')
+          label.append($("<span>").text(RED.utils.getNodeLabel(nde) + " (self)"))
+        } else {
+          label.append('<i class="fa fa-tag"></i>&nbsp;')
+          label.append($("<span>").text(RED.utils.getNodeLabel(nde)))
+        }
 
         container.append(label)
         container.append($('<br/>'))
@@ -198,7 +202,7 @@
   </div>
 
   <div class="form-row">
-    <button class='red-ui-button' id='node-input-add-self-button'>Add Self</button>
+    <button class='red-ui-button' id='node-input-add-self-button'><i class="fa fa-rotate-right"></i> <span data-i18n="mermaid-flowchart.label.add_keep_state"></span></button>
   </div>
 
   <div class="form-row">

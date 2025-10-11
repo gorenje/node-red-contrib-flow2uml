@@ -3,7 +3,8 @@
 
 
     "label": {
-      "statusset": "Status Set"
+      "statusset": "Status Set",
+      "state": "Start State"
     },
 
     "status": {

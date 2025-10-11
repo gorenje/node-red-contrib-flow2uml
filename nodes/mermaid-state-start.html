@@ -62,9 +62,9 @@
 
         var label = $('<label>', { "data-id": nde.id, onmouseover: "RED.view.reveal($(this).data('id'),true);RED.view.redraw();", onmouseout: "RED.view.redraw();" })
 
-        label.append('<i class="fa fa-tag"></i>&nbsp;')
+        label.append('<i class="fa fa-map-marker"></i>&nbsp;')
 
-        label.append($("<span>").text(RED.utils.getNodeLabel(nde) + (nde.id == this.id ? " (self)" : "")))
+        label.append($("<span>").text(RED.utils.getNodeLabel(nde) + (nde.id == this.id ? " <b>keep state</b>" : "")))
 
         container.append(label)
         container.append($('<br/>'))
@@ -118,8 +118,8 @@
 
 <script type="text/html" data-template-name="mermaid-state-start">
   <div class="form-row">
-    <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name"></span></label>
-    <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
+    <label for="node-input-name"><i class="fa fa-map-marker"></i> <span data-i18n="mermaid-state-start.label.state"></span></label>
+    <input type="text" id="node-input-name" data-i18n="[placeholder]mermaid-state-start.label.state">
   </div>
 
     <div class="form-row">

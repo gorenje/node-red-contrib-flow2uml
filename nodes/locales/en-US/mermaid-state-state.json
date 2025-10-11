@@ -3,7 +3,9 @@
 
 
     "label": {
-      "statusset": "Status Set"
+      "statusset": "Status Set",
+      "add_keep_state": "Add Keep State",
+      "state": "State"
     },
 
     "status": {
