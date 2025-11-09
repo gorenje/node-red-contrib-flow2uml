@@ -1,14 +1,5 @@
 <script type="text/javascript">
   (function(){
-  
-
-  function frontendSupportFunction() {
-  }
-
-  var functTwo = (arg) => {
-
-  };
-  
   RED.nodes.registerType('mermaid-state-state',{
     color: '#D7D7A0',
     icon: "font-awesome/fa-map-marker",
@@ -64,6 +55,9 @@
         if (nde.id == this.id) {
           label.append('<i class="fa fa-rotate-right"></i>&nbsp;')
           label.append($("<span>").text(RED.utils.getNodeLabel(nde) + " (this state)"))
+        } else if (nde.type == "mermaid-state-end") {
+          label.append('<i class="fa fa-bullseye"></i>&nbsp;')
+          label.append($("<span>").text(RED.utils.getNodeLabel(nde)))
         } else {
           label.append('<i class="fa fa-map-marker"></i>&nbsp;')
           label.append($("<span>").text(RED.utils.getNodeLabel(nde)))
