@@ -194,7 +194,7 @@ ${flowSource}
          while (configNodes.length > 1) {
              var configNode = configNodes.pop();
              RED.nodes.remove(configNode.id);
-             RED.nodes.dirty(true);
+             // RED.nodes.dirty(true);
          }
 
          // When we found a config node, let's use that one
@@ -224,7 +224,7 @@ ${flowSource}
          RED.nodes.add(globalYourConfigNode);
 
          // Make sure the "Deploy" button becomes active
-         RED.nodes.dirty(true);
+         // RED.nodes.dirty(true);
       }      
    }
 
@@ -253,7 +253,10 @@ ${flowSource}
          node. Hence define it here incase this is the "old" config ndoe. The new config node has this
          attribute *but* has the same type so the new config isn't installed.
       */
-      if ( !globalYourConfigNode.genmereditor ) { globalYourConfigNode.genmereditor = ""; RED.nodes.dirty(true); }
+      if ( !globalYourConfigNode.genmereditor ) { 
+         globalYourConfigNode.genmereditor = ""; 
+         // RED.nodes.dirty(true); 
+      }
 
       $('#node-input-genmereditor-mermaid-code').html("<code>" + globalYourConfigNode.genmereditor.replaceAll("\n","<br>") + "</code>");
       $('#node-input-genmereditor-mermaid-code').data('mermaid', btoa(globalYourConfigNode.genmereditor))
