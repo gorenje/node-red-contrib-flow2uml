@@ -349,16 +349,29 @@ ${flowSource}
          createErlangStateMNode(statemDef, "async")
       })
 
+
       $('#node-input-generate-and-view-diagram-but').on('click', (e) => {
          doSomething(e);
          setTimeout(() => { $('#genmermaid-view-uml-link')[0].click() }, 100)
       })
 
+      // When the user has entered new data in the sidebar, then store it into the config node
+      $("#node-input-genmerdirection").on("change", function() {
+        ensureYourConfigNodeExists();
+
+        let data = $(this).val();
+
+         if (globalYourConfigNode.direction != data) {
+            globalYourConfigNode.direction = data;
+            // Since the config node has been updated, the 'Deploy' button should become active
+            RED.nodes.dirty(true);
+         }
+      })
+
       $("#node-input-genmerdirection").typedInput({
-            type: "direction",
             types: [
                {
-                  value: "direction",
+                  value: "genmerdirection",
                   
                   options: [
                         { "value":"TB", "label": "Top to Bottom"},
@@ -369,22 +382,8 @@ ${flowSource}
                }
             ]
       });
-
       // At startup load your config node data into the plugin sidebar html elements
-      $("#node-input-genmerdirection").typedInput('value', globalYourConfigNode.direction);
-
-      // When the user has entered new data in the sidebar, then store it into the config node
-      $("#node-input-genmerdirection").on("change", function() {
-        ensureYourConfigNodeExists();
-
-        let data = $("#node-input-genmerdirection").typedInput("value")
-
-         if (globalYourConfigNode.direction != data) {
-            globalYourConfigNode.direction = data;
-            // Since the config node has been updated, the 'Deploy' button should become active
-            // RED.nodes.dirty(true);
-         }
-      })
+      $('#node-input-genmerdirection').val(globalYourConfigNode.direction)
 
       // Allow dynamic re-size after init. appearance 
       setTimeout(function () {
